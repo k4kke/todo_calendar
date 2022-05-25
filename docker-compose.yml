@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  php:
+    build: .
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - '8000:8000'
+  mysql:
+    image: mysql:5.7
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: laravel
+  ngrok:
+    image: wernight/ngrok
+    ports:
+      - ${WEB_PORT:-4040}:4040
+    environment:
+      NGROK_AUTH: ${NGROK_AUTH}
+      NGROK_PROTOCOL: http
+      NGROK_PORT: web:80
+      # SSLの場合
+      # NGROK_PROTOCOL: https
+      # NGROK_PORT: web:443
